@@ -1,6 +1,4 @@
 #!/bin/bash
-echo "Место в папке"
-
 cd $1
 
 printf "Путь к папке - $1\nПользовательский процент $2\n"
@@ -15,7 +13,7 @@ if [ -z "$2" ]; then
 	exit 1
 fi
 
-
+echo "Mount"
 sudo dd if=/dev/zero of=file.img bs=1G count=1
 
 mkfs.ext4 file.img
