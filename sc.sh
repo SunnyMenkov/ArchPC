@@ -26,6 +26,13 @@ mkfs.ext4 file.img
 
 sudo mount -o loop file.img $1
 
+	if [ $? -eq 0 ]; then
+    echo "Маунт успешен"
+else
+    echo "Ошибка"
+	exit 1
+fi
+
 cd $HOME
 
 for i in {1..5}
