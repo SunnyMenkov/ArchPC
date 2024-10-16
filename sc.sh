@@ -1,7 +1,12 @@
 #!/bin/bash
 cd $1
 
-printf "Путь к папке - $1\nПользовательский процент $2\n"
+if ! [ $? -eq 0 ]; then
+	echo "Ошибка пути"
+	exit 1
+fi
+
+printf "Путь к папке - $1\nПользовательский процент - $2\nКоличество файлов для архивации - $3\n"
 
 if [ -z "$1" ]; then
     echo "Путь не указан, завершение"
@@ -18,6 +23,31 @@ if [ -z "$3" ]; then
 	exit 1
 fi
 
+
+if ! [[ "$2" =~ ^-?[0-9]+$ ]]; then
+  
+  echo "$2 не является целым числом."
+  exit 1
+fi
+
+if [ "$2" -lt 0 -o "$2" -gt 100 ]; then
+	echo "Выход за границы $2%"
+	exit 1
+fi
+
+if [ "$3" -lt 0 ]; then
+	echo "Отрицательное количество файлов"
+	exit 1
+fi
+
+if ! [[ "$3" =~ ^-?[0-9]+$ ]]; then
+  
+  echo "$3 не является целым числом."
+  exit 1
+fi
+
+
+
 echo "Mount"
 echo "$3"
 sudo dd if=/dev/zero of=file.img bs=1G count=1
@@ -26,12 +56,7 @@ mkfs.ext4 file.img
 
 sudo mount -o loop file.img $1
 
-	if [ $? -eq 0 ]; then
-    echo "Маунт успешен"
-else
-    echo "Ошибка"
-	exit 1
-fi
+
 
 cd $HOME
 
