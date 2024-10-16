@@ -13,7 +13,13 @@ if [ -z "$2" ]; then
 	exit 1
 fi
 
+if [ -z "$3" ]; then
+	echo "Не указано количество архивируемых файлов"
+	exit 1
+fi
+
 echo "Mount"
+echo "$3"
 sudo dd if=/dev/zero of=file.img bs=1G count=1
 
 mkfs.ext4 file.img
@@ -72,7 +78,7 @@ echo "Процент заполненности: $USAGE_PERCENT%"
 cd $HOME
 
 
-#sudo umount $1
+FILES_TO_ARCHIVE="$3"
 
 if [ "$USAGE_PERCENT" -lt $2 ]; then
 
@@ -81,8 +87,8 @@ if [ "$USAGE_PERCENT" -lt $2 ]; then
 	cd $OLDPWD
 	sudo mkdir backup
 	cd backup
-	sudo tar -czvf archive.tar.bz2 $1
-	
+	#sudo tar -czvf archive.tar.bz2 $1
+	find "$1" -type f -printf "%T@ %p\n" | sort -n | head -n "$FILES_TO_ARCHIVE" | cut -d' ' -f2 | sudo tar -czvf archive.tar.bz2 -T -
 	
 		if [ $? -eq 0 ]; then
     echo "Архив сделан, удаление файлов"
