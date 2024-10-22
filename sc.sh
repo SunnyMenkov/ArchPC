@@ -49,7 +49,6 @@ fi
 
 
 echo "Mount"
-echo "$3"
 sudo dd if=/dev/zero of=file.img bs=1G count=1
 
 mkfs.ext4 file.img
@@ -96,7 +95,8 @@ fi
 TOTAL_SPACE=$(df "$DIR" | awk 'NR==2 {print $2}')
 
 # Рассчитываем процент заполненности
-USAGE_PERCENT=$((100 * DIR_SIZE / 2000000000))
+USAGE_PERCENT=$((100 * DIR_SIZE / 974000000))
+								  
 
 # Выводим результаты
 echo "Папка: $DIR"
@@ -112,10 +112,8 @@ cd $HOME
 
 FILES_TO_ARCHIVE="$3"
 
-if [ "$USAGE_PERCENT" -lt $2 ]; then
-
-	echo "if we are here! $OLDPWD"
-
+if [ "$USAGE_PERCENT" -gt $2 ]; then
+	
 	cd $OLDPWD
 	sudo mkdir backup
 	cd backup
